@@ -51,4 +51,4 @@ class BasicGridEnvironment(GridEnvironment):
         if cell.isLeftOf(0):cell.moveRight()
         elif cell.isRightOf(self._width-1): cell.moveLeft()
         if cell.isBelow(0): cell.moveUp()
-        elif cell.isAbove(self._height - 1): cell.moveDown()
+        elif cell.isAbove(self._height-1): cell.moveDown()

@@ -1,15 +1,19 @@
-from petridish.location import Location
-from petridish.actor import Actor, RandomActor
+from petridish.locatable import Locatable
+from petridish.movable import Movable
+from petridish.point import Point
 
+class Cell(Locatable, Movable):
 
-class Cell:
+    def act(self, bodies): raise NotImplementedError('Must implement Cell interface.')
 
-    def __init__(self, location=None, actor=Actor()):
-        if location is None: location = Location()
+class BasicCell(Cell):
+
+    def __init__(self, actor, location=None):
+        if location is None: location = Point()
         self._location = location
         self._actor = actor
 
-    def location(self): return self._location
+    def coordinates(self): return self._location.coordinates()
 
     def moveLeft(self): self._location.moveLeft()
 

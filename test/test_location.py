@@ -1,11 +1,11 @@
 import unittest
 
-from petridish.location import Location
+from petridish.point import Point
 
 class TestLocation(unittest.TestCase):
 
     def setUp(self):
-        self._location = Location()
+        self._location = Point()
 
     def moveHelper(self, moveFunction, finalLoc):
         self.assertEqual(self._location.coordinates(), (0, 0))

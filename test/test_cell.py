@@ -1,21 +1,21 @@
 import unittest
 from mock import MagicMock
 
-from petridish.cell import Cell
-from petridish.location import Location
+from petridish.cell import BasicCell
+from petridish.point import Point
 from petridish.actor import Actor
 
-class TestCell(unittest.TestCase):
+class TestBasicCell(unittest.TestCase):
 
     _X_EQUALS = 52
     _Y_EQUALS = 78
 
     def setUp(self):
 
-        self._location = Location()
+        self._location = Point()
         self._actor = Actor()
 
-        self._cell = Cell(self._location, self._actor)
+        self._cell = BasicCell(self._actor, self._location)
 
         self._location.moveLeft = MagicMock()
         self._location.moveRight = MagicMock()

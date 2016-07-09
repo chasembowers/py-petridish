@@ -1,4 +1,8 @@
-class Location:
+from petridish.locatable import Locatable
+from petridish.movable import Movable
+
+
+class Point(Locatable, Movable):
 
     def __init__(self, coordinates=(0,0)):
         self._coordinates = coordinates

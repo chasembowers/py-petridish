@@ -6,7 +6,7 @@ class Animator:
     def __init__(self, env):
         self._env = env
         self._cells = env.cells()
-        self._circles = [plt.Circle(c.location().coordinates(), .5) for c in self._cells]
+        self._circles = [plt.Circle(c.coordinates(), .5) for c in self._cells]
 
     def _firstFrame(self):
         for c in self._circles: c.set_visible(False)
@@ -17,7 +17,7 @@ class Animator:
         if i == 1:
             for c in self._circles: c.set_visible(True)
         for i in range(len(self._circles)):
-            self._circles[i].center = self._cells[i].location().coordinates()
+            self._circles[i].center = self._cells[i].coordinates()
         return self._circles
 
     def animate(self):
