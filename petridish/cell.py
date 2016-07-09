@@ -13,8 +13,6 @@ class BasicCell(Cell):
         self._location = location
         self._actor = actor
 
-    def coordinates(self): return self._location.coordinates()
-
     def moveLeft(self): self._location.moveLeft()
 
     def moveRight(self): self._location.moveRight()
@@ -32,3 +30,5 @@ class BasicCell(Cell):
     def isBelow(self, yEquals): return self._location.isBelow(yEquals)
 
     def isAbove(self, yEquals): return self._location.isAbove(yEquals)
+
+    def coordinates(self): return self._location.coordinates()
