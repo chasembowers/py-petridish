@@ -8,9 +8,6 @@ from petridish.resource import BasicResource
 class TestBasicResource(unittest.TestCase):
 
     _ENERGY = 48
-    _SOME_ENERGY = 34
-    _TOO_MUCH_ENERGY = 67
-    _NEGATIVE_ENERGY = -32
 
     _X_EQUALS = 98
     _Y_EQUALS = 28
@@ -42,14 +39,17 @@ class TestBasicResource(unittest.TestCase):
         self._location.isAbove.assert_called_with(self._Y_EQUALS)
 
     def test_giveSomeEnergy(self):
-        self._resource.giveEnergy(self._SOME_ENERGY)
-        assert self._resource.energy() == self._ENERGY - self._SOME_ENERGY
+        someEnergy = 34
+        self._resource.giveEnergy(someEnergy)
+        assert self._resource.energy() == self._ENERGY - someEnergy
 
     def test_giveTooMuchEnergy(self):
-        self.assertRaises(ValueError, self._resource.giveEnergy, self._TOO_MUCH_ENERGY)
+        tooMuchEnergy = 67
+        self.assertRaises(ValueError, self._resource.giveEnergy, tooMuchEnergy)
 
     def test_giveNegativeEnergy(self):
-        self.assertRaises(ValueError, self._resource.giveEnergy, self._NEGATIVE_ENERGY)
+        negativeEnergy = -32
+        self.assertRaises(ValueError, self._resource.giveEnergy, negativeEnergy)
 
 if __name__ == '__main__':
     unittest.main()

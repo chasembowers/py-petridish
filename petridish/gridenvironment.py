@@ -6,10 +6,16 @@ class GridEnvironment(object):
     def height(self):
         raise NotImplementedError('Must implement Environment interface.')
 
-    def addCell(self, body):
+    def addCell(self, cell):
         raise NotImplementedError('Must implement Environment interface.')
 
     def cells(self):
+        raise NotImplementedError('Must implement Environment interface.')
+
+    def addResource(self, resource):
+        raise NotImplementedError('Must implement Environment interface.')
+
+    def resources(self):
         raise NotImplementedError('Must implement Environment interface.')
 
     def timeStep(self):
@@ -20,6 +26,7 @@ class BasicGridEnvironment(GridEnvironment):
 
     def __init__(self, width, height):
         self._cells = []
+        self._resources = []
         self._width = width
         self._height = height
 
@@ -27,11 +34,27 @@ class BasicGridEnvironment(GridEnvironment):
 
     def height(self): return self._height
 
-    def addCell(self, body):
-        self._cells.append(body)
+    def _assertInBounds(self, locatable):
+        if \
+            locatable.isLeftOf(0) or \
+            locatable.isRightOf(self._width-1) or \
+            locatable.isBelow(0) or \
+            locatable.isAbove(self._height-1):
+                raise  ValueError('Cannot add Locatable outside grid.')
+
+    def addCell(self, cell):
+        self._assertInBounds(cell)
+        self._cells.append(cell)
+
+    def addResource(self, resource):
+        self._assertInBounds(resource)
+        self._resources.append(resource)
 
     def cells(self):
         return self._cells
+
+    def resources(self):
+        return self._resources
 
     def timeStep(self):
         for cell in self._cells:
@@ -47,8 +70,8 @@ class BasicGridEnvironment(GridEnvironment):
         elif action == 'down': body.moveDown()
         else: raise Exception('Not a valid action')
 
-    def _moveInBounds(self, cell):
-        if cell.isLeftOf(0):cell.moveRight()
-        elif cell.isRightOf(self._width-1): cell.moveLeft()
-        if cell.isBelow(0): cell.moveUp()
-        elif cell.isAbove(self._height-1): cell.moveDown()
+    def _moveInBounds(self, locatable):
+        if locatable.isLeftOf(0):locatable.moveRight()
+        elif locatable.isRightOf(self._width-1): locatable.moveLeft()
+        if locatable.isBelow(0): locatable.moveUp()
+        elif locatable.isAbove(self._height-1): locatable.moveDown()

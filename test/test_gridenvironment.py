@@ -3,6 +3,7 @@ from mock import MagicMock
 
 from petridish.gridenvironment import BasicGridEnvironment
 from petridish.cell import Cell
+from petridish.resource import Resource
 
 
 class TestBasicGridEnvironment(unittest.TestCase):
@@ -14,9 +15,8 @@ class TestBasicGridEnvironment(unittest.TestCase):
 
 
         self._env = BasicGridEnvironment(self._WIDTH, self._HEIGHT)
-        self._cell = Cell()
-        self._env.addCell(self._cell)
 
+        self._cell = Cell()
         self._cell.moveLeft = MagicMock()
         self._cell.moveRight = MagicMock()
         self._cell.moveUp = MagicMock()
@@ -26,6 +26,28 @@ class TestBasicGridEnvironment(unittest.TestCase):
         self._cell.isBelow = MagicMock(return_value=False)
         self._cell.isAbove = MagicMock(return_value=False)
         self._cell.act = MagicMock(return_value=None)
+
+        self._resource = Resource()
+        self._resource.isLeftOf = MagicMock(return_value=False)
+        self._resource.isRightOf = MagicMock(return_value=False)
+        self._resource.isBelow = MagicMock(return_value=False)
+        self._resource.isAbove = MagicMock(return_value=False)
+
+        self._env.addCell(self._cell)
+
+    def test_addCells(self):
+        cellsToAdd = 5
+        cellsBefore = len(self._env.cells())
+        for i in range(cellsToAdd): self._env.addCell(self._cell)
+        cellsAfter = len(self._env.cells())
+        assert cellsAfter - cellsBefore == cellsToAdd
+
+    def test_addResources(self):
+        resourcesToAdd = 8
+        resourcesBefore = len(self._env.resources())
+        for i in range(resourcesToAdd): self._env.addResource(self._resource)
+        resourcesAfter = len(self._env.resources())
+        assert resourcesAfter - resourcesBefore == resourcesToAdd
 
     def moveHelper(self, direction):
         self._cell.act = MagicMock(return_value=direction)
@@ -62,6 +84,15 @@ class TestBasicGridEnvironment(unittest.TestCase):
         self._cell.isAbove = MagicMock(side_effect=lambda x: x == self._HEIGHT - 1)
         self._env.timeStep()
         self._cell.moveDown.assert_called_with()
+
+    def test_addCellOutOfBounds(self):
+        self._cell.isLeftOf = MagicMock(side_effect=lambda x: x == 0)
+        self.assertRaises(ValueError, self._env.addCell, self._cell)
+
+    def test_addResourceOutOfBounds(self):
+        self._resource.isAbove = MagicMock(side_effect=lambda x: x == self._HEIGHT - 1)
+        self.assertRaises(ValueError, self._env.addResource, self._resource)
+
 
 if __name__ == '__main__':
     unittest.main()
