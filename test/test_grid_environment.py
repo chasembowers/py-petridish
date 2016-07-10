@@ -1,7 +1,7 @@
 import unittest
 from mock import MagicMock
 
-from petridish.gridenvironment import BasicGridEnvironment
+from petridish.grid_environment import BasicGridEnvironment
 from petridish.cell import Cell
 from petridish.resource import Resource
 

@@ -1,11 +1,8 @@
+from petridish.energized import Energized
 from petridish.locatable import Locatable
 from petridish.point import Point
 
-class Resource(Locatable):
-
-    def energy(self): raise NotImplementedError('Must implement Resource interface.')
-
-    def releaseEnergy(self, energy): raise NotImplementedError('Must implement Resource interface.')
+class Resource(Locatable, Energized): pass
 
 class BasicResource(Resource):
 

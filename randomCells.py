@@ -1,7 +1,7 @@
 from animator import Animator
 from petridish.actor import RandomActor
 from petridish.cell import BasicCell
-from petridish.gridenvironment import BasicGridEnvironment
+from petridish.grid_environment import BasicGridEnvironment
 
 
 def main():

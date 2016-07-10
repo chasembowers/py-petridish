@@ -40,7 +40,7 @@ class BasicGridEnvironment(GridEnvironment):
             locatable.isRightOf(self._width-1) or \
             locatable.isBelow(0) or \
             locatable.isAbove(self._height-1):
-                raise  ValueError('Cannot add Locatable outside grid.')
+                raise ValueError('Cannot add Locatable outside grid.')
 
     def addCell(self, cell):
         self._assertInBounds(cell)

@@ -1,8 +1,9 @@
+from petridish.energized import Energized
 from petridish.locatable import Locatable
 from petridish.movable import Movable
 from petridish.point import Point
 
-class Cell(Locatable, Movable):
+class Cell(Locatable, Movable, Energized):
 
     def act(self, bodies): raise NotImplementedError('Must implement Cell interface.')
 
