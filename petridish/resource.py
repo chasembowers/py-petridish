@@ -5,7 +5,7 @@ class Resource(Locatable):
 
     def energy(self): raise NotImplementedError('Must implement Resource interface.')
 
-    def giveEnergy(self, energy): raise NotImplementedError('Must implement Resource interface.')
+    def releaseEnergy(self, energy): raise NotImplementedError('Must implement Resource interface.')
 
 class BasicResource(Resource):
 
@@ -27,7 +27,7 @@ class BasicResource(Resource):
 
     def energy(self): return self._myEnergy
 
-    def giveEnergy(self, energy):
+    def releaseEnergy(self, energy):
         if energy > self._myEnergy:
             raise ValueError('Resource does not have enough energy')
         if energy < 0:

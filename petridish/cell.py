@@ -8,10 +8,11 @@ class Cell(Locatable, Movable):
 
 class BasicCell(Cell):
 
-    def __init__(self, actor, location=None):
+    def __init__(self, actor, energy, location=None):
         if location is None: location = Point()
         self._location = location
         self._actor = actor
+        self._myEnergy = energy
 
     def moveLeft(self): self._location.moveLeft()
 
@@ -32,3 +33,9 @@ class BasicCell(Cell):
     def isAbove(self, yEquals): return self._location.isAbove(yEquals)
 
     def coordinates(self): return self._location.coordinates()
+
+    def energy(self): return self._myEnergy
+
+    def consumeEnergy(self, energy):
+        if energy < 0: raise ValueError('Cannot consume negative energy.')
+        self._myEnergy += energy

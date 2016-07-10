@@ -38,18 +38,18 @@ class TestBasicResource(unittest.TestCase):
         self._resource.isAbove(self._Y_EQUALS)
         self._location.isAbove.assert_called_with(self._Y_EQUALS)
 
-    def test_giveSomeEnergy(self):
+    def test_releaseSomeEnergy(self):
         someEnergy = 34
-        self._resource.giveEnergy(someEnergy)
+        self._resource.releaseEnergy(someEnergy)
         assert self._resource.energy() == self._ENERGY - someEnergy
 
-    def test_giveTooMuchEnergy(self):
+    def test_releaseTooMuchEnergy(self):
         tooMuchEnergy = 67
-        self.assertRaises(ValueError, self._resource.giveEnergy, tooMuchEnergy)
+        self.assertRaises(ValueError, self._resource.releaseEnergy, tooMuchEnergy)
 
-    def test_giveNegativeEnergy(self):
+    def test_releaseNegativeEnergy(self):
         negativeEnergy = -32
-        self.assertRaises(ValueError, self._resource.giveEnergy, negativeEnergy)
+        self.assertRaises(ValueError, self._resource.releaseEnergy, negativeEnergy)
 
 if __name__ == '__main__':
     unittest.main()
