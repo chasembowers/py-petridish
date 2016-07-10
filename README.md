@@ -8,11 +8,3 @@ evolve the cells using a genetic algorithm until they do something cool.
 I would also like to implement a cell with a neural network and allow for different implementations of cells to compete.
 
 A simple animation of random-behavior cells can be seen in 'randomCells.py'.
-
-todo:
-delete empty resources/cells
-cells lose energy with actions
-resource spawner
-squared distance with coef actor
-cell/actor reproduction
-return copies?
