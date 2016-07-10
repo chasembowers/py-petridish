@@ -1,3 +1,6 @@
+from petridish.resource_distributor import EqualSplitResourceDistributor
+
+
 class GridEnvironment(object):
 
     def width(self):
@@ -24,11 +27,14 @@ class GridEnvironment(object):
 
 class BasicGridEnvironment(GridEnvironment):
 
-    def __init__(self, width, height):
+    def __init__(self, width, height, resourceDistributor=None):
         self._cells = []
         self._resources = []
         self._width = width
         self._height = height
+
+        if resourceDistributor is None: resourceDistributor = EqualSplitResourceDistributor()
+        self._distributor = resourceDistributor
 
     def width(self): return self._width
 
@@ -61,6 +67,7 @@ class BasicGridEnvironment(GridEnvironment):
             action = cell.act(self._cells)
             self._doAction(cell, action)
             self._moveInBounds(cell)
+        self._distributor.distribute(self._cells, self._resources)
 
     def _doAction(self, body, action):
         if not action: return

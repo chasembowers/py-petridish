@@ -4,6 +4,7 @@ from mock import MagicMock
 from petridish.grid_environment import BasicGridEnvironment
 from petridish.cell import Cell
 from petridish.resource import Resource
+from petridish.resource_distributor import ResourceDistributor
 
 
 class TestBasicGridEnvironment(unittest.TestCase):
@@ -13,8 +14,10 @@ class TestBasicGridEnvironment(unittest.TestCase):
 
     def setUp(self):
 
+        self._distributor = ResourceDistributor()
+        self._distributor.distribute = MagicMock()
 
-        self._env = BasicGridEnvironment(self._WIDTH, self._HEIGHT)
+        self._env = BasicGridEnvironment(self._WIDTH, self._HEIGHT, self._distributor)
 
         self._cell = Cell()
         self._cell.moveLeft = MagicMock()
@@ -93,6 +96,9 @@ class TestBasicGridEnvironment(unittest.TestCase):
         self._resource.isAbove = MagicMock(side_effect=lambda x: x == self._HEIGHT - 1)
         self.assertRaises(ValueError, self._env.addResource, self._resource)
 
+    def test_resourceDistributor(self):
+        self._env.timeStep()
+        self._distributor.distribute.assert_called_with([self._cell],[])
 
 if __name__ == '__main__':
     unittest.main()
