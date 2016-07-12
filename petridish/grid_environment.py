@@ -1,4 +1,5 @@
 from petridish.resource_distributor import EqualSplitResourceDistributor
+from petridish.resource_spawner import UniformResourceSpawner
 
 
 class GridEnvironment(object):
@@ -15,9 +16,6 @@ class GridEnvironment(object):
     def cells(self):
         raise NotImplementedError('Must implement Environment interface.')
 
-    def addResource(self, resource):
-        raise NotImplementedError('Must implement Environment interface.')
-
     def resources(self):
         raise NotImplementedError('Must implement Environment interface.')
 
@@ -27,7 +25,7 @@ class GridEnvironment(object):
 
 class BasicGridEnvironment(GridEnvironment):
 
-    def __init__(self, width, height, resourceDistributor=None):
+    def __init__(self, width, height, resourceDistributor=None, resourceSpawner=None):
         self._cells = []
         self._resources = []
         self._width = width
@@ -35,6 +33,8 @@ class BasicGridEnvironment(GridEnvironment):
 
         if resourceDistributor is None: resourceDistributor = EqualSplitResourceDistributor()
         self._distributor = resourceDistributor
+        if resourceSpawner is None: resourceSpawner = UniformResourceSpawner()
+        self._spawner = resourceSpawner
 
     def width(self): return self._width
 
@@ -52,7 +52,7 @@ class BasicGridEnvironment(GridEnvironment):
         self._assertInBounds(cell)
         self._cells.append(cell)
 
-    def addResource(self, resource):
+    def _addResource(self, resource):
         self._assertInBounds(resource)
         self._resources.append(resource)
 
@@ -68,6 +68,9 @@ class BasicGridEnvironment(GridEnvironment):
             self._doAction(cell, action)
             self._moveInBounds(cell)
         self._distributor.distribute(self._cells, self._resources)
+        for resource in self._spawner.spawn(self):
+            self._addResource(resource)
+        self._removeDead()
 
     def _doAction(self, body, action):
         if not action: return
@@ -82,3 +85,14 @@ class BasicGridEnvironment(GridEnvironment):
         elif locatable.isRightOf(self._width-1): locatable.moveLeft()
         if locatable.isBelow(0): locatable.moveUp()
         elif locatable.isAbove(self._height-1): locatable.moveDown()
+
+    def _removeDead(self):
+        cellsToRemove = set()
+        for cell in self._cells:
+            if cell.energy() == 0: cellsToRemove.add(cell)
+        self._cells = [x for x in self._cells if x not in cellsToRemove]
+
+        resourcesToRemove = set()
+        for resource in self._resources:
+            if resource.energy() == 0: resourcesToRemove.add(resource)
+        self._resources = [x for x in self._resources if x not in resourcesToRemove]

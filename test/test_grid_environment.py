@@ -5,19 +5,25 @@ from petridish.grid_environment import BasicGridEnvironment
 from petridish.cell import Cell
 from petridish.resource import Resource
 from petridish.resource_distributor import ResourceDistributor
+from petridish.resource_spawner import ResourceSpawner
 
 
 class TestBasicGridEnvironment(unittest.TestCase):
 
     _WIDTH = 123
     _HEIGHT = 456
+    _CELL_ENERGY = 39
+    _RESOURCE_ENERGY = 98
 
     def setUp(self):
 
         self._distributor = ResourceDistributor()
         self._distributor.distribute = MagicMock()
 
-        self._env = BasicGridEnvironment(self._WIDTH, self._HEIGHT, self._distributor)
+        self._spawner = ResourceSpawner()
+        self._spawner.spawn = MagicMock()
+
+        self._env = BasicGridEnvironment(self._WIDTH, self._HEIGHT, self._distributor, self._spawner)
 
         self._cell = Cell()
         self._cell.moveLeft = MagicMock()
@@ -29,12 +35,14 @@ class TestBasicGridEnvironment(unittest.TestCase):
         self._cell.isBelow = MagicMock(return_value=False)
         self._cell.isAbove = MagicMock(return_value=False)
         self._cell.act = MagicMock(return_value=None)
+        self._cell.energy = MagicMock(return_value=self._CELL_ENERGY)
 
         self._resource = Resource()
         self._resource.isLeftOf = MagicMock(return_value=False)
         self._resource.isRightOf = MagicMock(return_value=False)
         self._resource.isBelow = MagicMock(return_value=False)
         self._resource.isAbove = MagicMock(return_value=False)
+        self._resource.energy = MagicMock(return_value=self._RESOURCE_ENERGY)
 
         self._env.addCell(self._cell)
 
@@ -48,7 +56,7 @@ class TestBasicGridEnvironment(unittest.TestCase):
     def test_addResources(self):
         resourcesToAdd = 8
         resourcesBefore = len(self._env.resources())
-        for i in range(resourcesToAdd): self._env.addResource(self._resource)
+        for i in range(resourcesToAdd): self._env._addResource(self._resource)
         resourcesAfter = len(self._env.resources())
         assert resourcesAfter - resourcesBefore == resourcesToAdd
 
@@ -94,11 +102,33 @@ class TestBasicGridEnvironment(unittest.TestCase):
 
     def test_addResourceOutOfBounds(self):
         self._resource.isAbove = MagicMock(side_effect=lambda x: x == self._HEIGHT - 1)
-        self.assertRaises(ValueError, self._env.addResource, self._resource)
+        self.assertRaises(ValueError, self._env._addResource, self._resource)
 
     def test_resourceDistributor(self):
         self._env.timeStep()
         self._distributor.distribute.assert_called_with([self._cell],[])
+
+    def test_resourceSpawner(self):
+
+        self._spawner.spawn = MagicMock(return_value=[self._resource])
+
+        assert self._resource not in self._env.resources()
+        self._env.timeStep()
+        self._spawner.spawn.assert_called_with(self._env)
+        assert self._resource in self._env.resources()
+
+    def test_removesDeadCells(self):
+        self._cell.energy = MagicMock(return_value=0)
+        assert self._cell in self._env.cells()
+        self._env.timeStep()
+        assert self._cell not in self._env.cells()
+
+    def test_removesDeadCells(self):
+        self._resource.energy = MagicMock(return_value=0)
+        self._env._addResource(self._resource)
+        assert self._resource in self._env.resources()
+        self._env.timeStep()
+        assert self._resource not in self._env.resources()
 
 if __name__ == '__main__':
     unittest.main()
