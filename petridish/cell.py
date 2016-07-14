@@ -23,6 +23,8 @@ class BasicCell(Cell):
 
     def moveDown(self): self._location.moveDown()
 
+    def moveTo(self, coordinates): self._location.moveTo(coordinates)
+
     def act(self, bodies): return self._actor.act(bodies)
 
     def isLeftOf(self, xEquals): return self._location.isLeftOf(xEquals)

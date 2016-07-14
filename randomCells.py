@@ -6,9 +6,9 @@ from petridish.grid_environment import BasicGridEnvironment
 
 def main():
     env = BasicGridEnvironment(50, 50)
-    env.addCell(BasicCell(RandomActor(), 10))
-    env.addCell(BasicCell(RandomActor(), 10))
-    env.addCell(BasicCell(RandomActor(), 10))
+    env.addCell(BasicCell(RandomActor(), 10), randLocation=True)
+    env.addCell(BasicCell(RandomActor(), 10), randLocation=True)
+    env.addCell(BasicCell(RandomActor(), 10), randLocation=True)
 
     a = Animator(env)
     a.animate()

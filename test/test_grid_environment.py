@@ -30,6 +30,7 @@ class TestBasicGridEnvironment(unittest.TestCase):
         self._cell.moveRight = MagicMock()
         self._cell.moveUp = MagicMock()
         self._cell.moveDown = MagicMock()
+        self._cell.moveTo = MagicMock()
         self._cell.isLeftOf = MagicMock(return_value=False)
         self._cell.isRightOf = MagicMock(return_value=False)
         self._cell.isBelow = MagicMock(return_value=False)
@@ -43,8 +44,6 @@ class TestBasicGridEnvironment(unittest.TestCase):
         self._resource.isBelow = MagicMock(return_value=False)
         self._resource.isAbove = MagicMock(return_value=False)
         self._resource.energy = MagicMock(return_value=self._RESOURCE_ENERGY)
-
-        self._env.addCell(self._cell)
 
     def test_addCells(self):
         cellsToAdd = 5
@@ -60,7 +59,17 @@ class TestBasicGridEnvironment(unittest.TestCase):
         resourcesAfter = len(self._env.resources())
         assert resourcesAfter - resourcesBefore == resourcesToAdd
 
+    def test_addCellAtRandomLocation(self):
+        self._env.addCell(self._cell, randLocation=True)
+
+        assert len(self._env.cells()) == 1
+
+        x,y = self._cell.moveTo.call_args[0][0]
+        assert x >= 0 and x < self._WIDTH
+        assert y >= 0 and y < self._HEIGHT
+
     def moveHelper(self, direction):
+        self._env.addCell(self._cell)
         self._cell.act = MagicMock(return_value=direction)
         self._env.timeStep()
         if direction == 'left': self._cell.moveLeft.assert_called_with()
@@ -77,26 +86,31 @@ class TestBasicGridEnvironment(unittest.TestCase):
     def test_moveDown(self): self.moveHelper('down')
 
     def test_outOfLeftBound(self):
+        self._env.addCell(self._cell)
         self._cell.isLeftOf = MagicMock(side_effect=lambda x: x == 0)
         self._env.timeStep()
         self._cell.moveRight.assert_called_with()
 
     def test_outOfRightBound(self):
+        self._env.addCell(self._cell)
         self._cell.isRightOf = MagicMock(side_effect=lambda x: x == self._WIDTH - 1)
         self._env.timeStep()
         self._cell.moveLeft.assert_called_with()
 
     def test_outOfLowerBound(self):
+        self._env.addCell(self._cell)
         self._cell.isBelow = MagicMock(side_effect=lambda x: x == 0)
         self._env.timeStep()
         self._cell.moveUp.assert_called_with()
 
     def test_outOfUpperBound(self):
+        self._env.addCell(self._cell)
         self._cell.isAbove = MagicMock(side_effect=lambda x: x == self._HEIGHT - 1)
         self._env.timeStep()
         self._cell.moveDown.assert_called_with()
 
     def test_addCellOutOfBounds(self):
+        self._env.addCell(self._cell)
         self._cell.isLeftOf = MagicMock(side_effect=lambda x: x == 0)
         self.assertRaises(ValueError, self._env.addCell, self._cell)
 
@@ -105,6 +119,7 @@ class TestBasicGridEnvironment(unittest.TestCase):
         self.assertRaises(ValueError, self._env._addResource, self._resource)
 
     def test_resourceDistributor(self):
+        self._env.addCell(self._cell)
         self._env.timeStep()
         self._distributor.distribute.assert_called_with([self._cell],[])
 

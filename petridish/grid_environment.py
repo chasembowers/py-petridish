@@ -1,6 +1,6 @@
 from petridish.resource_distributor import EqualSplitResourceDistributor
 from petridish.resource_spawner import UniformResourceSpawner
-
+from random import randint
 
 class GridEnvironment(object):
 
@@ -48,8 +48,11 @@ class BasicGridEnvironment(GridEnvironment):
             locatable.isAbove(self._height-1):
                 raise ValueError('Cannot add Locatable outside grid.')
 
-    def addCell(self, cell):
-        self._assertInBounds(cell)
+    def addCell(self, cell, randLocation=False):
+        if randLocation:
+            x,y = randint(0, self._width - 1), randint(0, self._height - 1)
+            cell.moveTo((x,y))
+        else: self._assertInBounds(cell)
         self._cells.append(cell)
 
     def _addResource(self, resource):

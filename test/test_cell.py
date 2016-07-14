@@ -24,6 +24,7 @@ class TestBasicCell(unittest.TestCase):
         self._location.moveRight = MagicMock()
         self._location.moveUp = MagicMock()
         self._location.moveDown = MagicMock()
+        self._location.moveTo = MagicMock()
         self._location.isLeftOf = MagicMock()
         self._location.isRightOf = MagicMock()
         self._location.isBelow = MagicMock()
@@ -46,6 +47,11 @@ class TestBasicCell(unittest.TestCase):
     def test_moveDown(self):
         self._cell.moveDown()
         self._location.moveDown.assert_called_with()
+
+    def test_moveTo(self):
+        coordinates = (8,7)
+        self._cell.moveTo(coordinates)
+        self._location.moveTo.assert_called_with(coordinates)
 
     def test_isLeftOf(self):
         self._cell.isLeftOf(self._X_EQUALS)

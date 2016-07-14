@@ -12,6 +12,9 @@ class Point(Locatable, Movable):
 
     def coordinates(self): return self._coordinates
 
+    def moveTo(self, coordinates):
+        self._coordinates = coordinates
+
     def moveLeft(self): self._move(-1, 0)
 
     def moveRight(self): self._move(1, 0)

@@ -7,3 +7,5 @@ class Movable(object):
     def moveUp(self): raise NotImplementedError('Must implement Movable interface.')
 
     def moveDown(self): raise NotImplementedError('Must implement Movable interface.')
+
+    def moveTo(self, coordinates): raise NotImplementedError('Must implement Movable interface.')
