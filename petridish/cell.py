@@ -25,7 +25,7 @@ class BasicCell(Cell):
 
     def moveTo(self, coordinates): self._location.moveTo(coordinates)
 
-    def act(self, bodies): return self._actor.act(bodies)
+    def act(self, cells, resources): return self._actor.act(self, cells, resources)
 
     def isLeftOf(self, xEquals): return self._location.isLeftOf(xEquals)
 
@@ -42,3 +42,10 @@ class BasicCell(Cell):
     def consumeEnergy(self, energy):
         if energy < 0: raise ValueError('Cannot consume negative energy.')
         self._myEnergy += energy
+
+    def releaseEnergy(self, energy):
+        if energy > self._myEnergy:
+            raise ValueError('Resource does not have enough energy')
+        if energy < 0:
+            raise ValueError('Cannot give negative energy.')
+        self._myEnergy -= energy

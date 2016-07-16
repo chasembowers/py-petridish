@@ -1,7 +1,7 @@
 import unittest
 from mock import MagicMock
 
-from petridish.cell import BasicCell
+from petridish.cell import BasicCell, Cell
 from petridish.point import Point
 from petridish.actor import Actor
 from petridish.resource import Resource
@@ -70,8 +70,10 @@ class TestBasicCell(unittest.TestCase):
         self._location.isAbove.assert_called_with(self._Y_EQUALS)
 
     def test_act(self):
-        self._cell.act([])
-        self._actor.act.assert_called_with([])
+        cells = [self._cell, Cell(), Cell()]
+        resources = [Resource()]
+        self._cell.act(cells, resources)
+        self._actor.act.assert_called_with(self._cell, cells, resources)
 
     def test_consumeSomeEnergy(self):
         someEnergy = 37
@@ -82,6 +84,19 @@ class TestBasicCell(unittest.TestCase):
     def test_consumeNegativeEnergy(self):
         negativeEnergy = -94
         self.assertRaises(ValueError, self._cell.consumeEnergy, negativeEnergy)
+
+    def test_releaseSomeEnergy(self):
+        someEnergy = 34
+        self._cell.releaseEnergy(someEnergy)
+        assert self._cell.energy() == self._CELL_ENERGY - someEnergy
+
+    def test_releaseTooMuchEnergy(self):
+        tooMuchEnergy = 67
+        self.assertRaises(ValueError, self._cell.releaseEnergy, tooMuchEnergy)
+
+    def test_releaseNegativeEnergy(self):
+        negativeEnergy = -32
+        self.assertRaises(ValueError, self._cell.releaseEnergy, negativeEnergy)
 
 if __name__ == '__main__':
     unittest.main()

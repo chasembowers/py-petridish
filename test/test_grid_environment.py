@@ -23,7 +23,9 @@ class TestBasicGridEnvironment(unittest.TestCase):
         self._spawner = ResourceSpawner()
         self._spawner.spawn = MagicMock()
 
-        self._env = BasicGridEnvironment(self._WIDTH, self._HEIGHT, self._distributor, self._spawner)
+        self._cost = {}
+
+        self._env = BasicGridEnvironment(self._WIDTH, self._HEIGHT, self._distributor, self._spawner, self._cost)
 
         self._cell = Cell()
         self._cell.moveLeft = MagicMock()
@@ -37,6 +39,7 @@ class TestBasicGridEnvironment(unittest.TestCase):
         self._cell.isAbove = MagicMock(return_value=False)
         self._cell.act = MagicMock(return_value=None)
         self._cell.energy = MagicMock(return_value=self._CELL_ENERGY)
+        self._cell.releaseEnergy = MagicMock()
 
         self._resource = Resource()
         self._resource.isLeftOf = MagicMock(return_value=False)
@@ -144,6 +147,17 @@ class TestBasicGridEnvironment(unittest.TestCase):
         assert self._resource in self._env.resources()
         self._env.timeStep()
         assert self._resource not in self._env.resources()
+
+    def test_cellLosesEnergyOfAction(self):
+
+        cellAction = "left"
+        self._cost[cellAction] = 58
+        self._cost["right"] = 29
+
+        self._cell.act = MagicMock(return_value=cellAction)
+        self._env.addCell(self._cell)
+        self._env.timeStep()
+        self._cell.releaseEnergy.assert_called_with(self._cost[cellAction])
 
 if __name__ == '__main__':
     unittest.main()

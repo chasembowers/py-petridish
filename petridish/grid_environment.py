@@ -1,3 +1,5 @@
+from copy import copy
+
 from petridish.resource_distributor import EqualSplitResourceDistributor
 from petridish.resource_spawner import UniformResourceSpawner
 from random import randint
@@ -22,10 +24,17 @@ class GridEnvironment(object):
     def timeStep(self):
         raise NotImplementedError('Must implement Environment interface.')
 
-
 class BasicGridEnvironment(GridEnvironment):
 
-    def __init__(self, width, height, resourceDistributor=None, resourceSpawner=None):
+    _defaultCost = {
+        None: 1,
+        "left": 2,
+        "right": 2,
+        "up": 2,
+        "down": 2
+    }
+
+    def __init__(self, width, height, resourceDistributor=None, resourceSpawner=None, cost=None):
         self._cells = []
         self._resources = []
         self._width = width
@@ -35,6 +44,8 @@ class BasicGridEnvironment(GridEnvironment):
         self._distributor = resourceDistributor
         if resourceSpawner is None: resourceSpawner = UniformResourceSpawner()
         self._spawner = resourceSpawner
+        if cost is None: cost = self._defaultCost
+        self._cost = cost
 
     def width(self): return self._width
 
@@ -67,7 +78,7 @@ class BasicGridEnvironment(GridEnvironment):
 
     def timeStep(self):
         for cell in self._cells:
-            action = cell.act(self._cells)
+            action = cell.act(self._cells, self._resources)
             self._doAction(cell, action)
             self._moveInBounds(cell)
         self._distributor.distribute(self._cells, self._resources)
@@ -75,13 +86,14 @@ class BasicGridEnvironment(GridEnvironment):
             self._addResource(resource)
         self._removeDead()
 
-    def _doAction(self, body, action):
+    def _doAction(self, cell, action):
         if not action: return
-        elif action == 'left': body.moveLeft()
-        elif action == 'right': body.moveRight()
-        elif action == 'up': body.moveUp()
-        elif action == 'down': body.moveDown()
+        elif action == 'left': cell.moveLeft()
+        elif action == 'right': cell.moveRight()
+        elif action == 'up': cell.moveUp()
+        elif action == 'down': cell.moveDown()
         else: raise Exception('Not a valid action')
+        if action in self._cost: cell.releaseEnergy(self._cost[action])
 
     def _moveInBounds(self, locatable):
         if locatable.isLeftOf(0):locatable.moveRight()
