@@ -1,13 +1,12 @@
 import unittest
 from mock import MagicMock
 
+from petridish.energized import Energized
 from petridish.point import Point
 from petridish.resource import BasicResource
 
 
 class TestBasicResource(unittest.TestCase):
-
-    _ENERGY = 48
 
     _X_EQUALS = 98
     _Y_EQUALS = 28
@@ -15,12 +14,17 @@ class TestBasicResource(unittest.TestCase):
     def setUp(self):
 
         self._location = Point()
-        self._resource = BasicResource(self._ENERGY, self._location)
+        self._energized = Energized()
+        self._resource = BasicResource(self._energized, self._location)
 
         self._location.isLeftOf = MagicMock()
         self._location.isRightOf = MagicMock()
         self._location.isBelow = MagicMock()
         self._location.isAbove = MagicMock()
+
+        self._energized.consumeEnergy = MagicMock()
+        self._energized.releaseEnergy = MagicMock()
+        self._energized.energy = MagicMock(return_value=92)
 
     def test_isLeftOf(self):
         self._resource.isLeftOf(self._X_EQUALS)
@@ -41,15 +45,11 @@ class TestBasicResource(unittest.TestCase):
     def test_releaseSomeEnergy(self):
         someEnergy = 34
         self._resource.releaseEnergy(someEnergy)
-        assert self._resource.energy() == self._ENERGY - someEnergy
+        self._energized.releaseEnergy.assert_called_with(someEnergy)
 
-    def test_releaseTooMuchEnergy(self):
-        tooMuchEnergy = 67
-        self.assertRaises(ValueError, self._resource.releaseEnergy, tooMuchEnergy)
-
-    def test_releaseNegativeEnergy(self):
-        negativeEnergy = -32
-        self.assertRaises(ValueError, self._resource.releaseEnergy, negativeEnergy)
+    def test_getEnergy(self):
+        assert self._resource.energy() == self._energized.energy()
+        self._energized.energy.assert_called_with()
 
 if __name__ == '__main__':
     unittest.main()

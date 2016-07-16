@@ -1,6 +1,7 @@
 import random
 from copy import copy
 
+from petridish.energized import SimpleEnergy
 from petridish.point import Point
 from petridish.resource import BasicResource
 
@@ -11,9 +12,11 @@ class ResourceSpawner(object):
 
 class UniformResourceSpawner(ResourceSpawner):
 
-    def __init__(self, energy=10, probSpawn=.1):
-        self._energy = energy
+    def __init__(self, energized=None, probSpawn=.1):
         self._probSpawn = probSpawn
+
+        if energized is None: energized = SimpleEnergy(10)
+        self._energized = energized
 
     def spawn(self, env):
 
@@ -23,6 +26,6 @@ class UniformResourceSpawner(ResourceSpawner):
             x = random.randint(0, env.width()-1)
             y = random.randint(0, env.height()-1)
             resourceLocation = Point((x,y))
-            newResources.append(BasicResource(self._energy, resourceLocation))
+            newResources.append(BasicResource(copy(self._energized), resourceLocation))
 
         return newResources

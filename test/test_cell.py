@@ -2,6 +2,7 @@ import unittest
 from mock import MagicMock
 
 from petridish.cell import BasicCell, Cell
+from petridish.energized import Energized
 from petridish.point import Point
 from petridish.actor import Actor
 from petridish.resource import Resource
@@ -11,14 +12,14 @@ class TestBasicCell(unittest.TestCase):
 
     _X_EQUALS = 52
     _Y_EQUALS = 78
-    _CELL_ENERGY = 47
 
     def setUp(self):
 
         self._location = Point()
         self._actor = Actor()
+        self._energized = Energized()
 
-        self._cell = BasicCell(self._actor, self._CELL_ENERGY, self._location)
+        self._cell = BasicCell(self._actor, self._energized, self._location)
 
         self._location.moveLeft = MagicMock()
         self._location.moveRight = MagicMock()
@@ -31,6 +32,10 @@ class TestBasicCell(unittest.TestCase):
         self._location.isAbove = MagicMock()
 
         self._actor.act = MagicMock()
+
+        self._energized.consumeEnergy = MagicMock()
+        self._energized.releaseEnergy = MagicMock()
+        self._energized.energy = MagicMock(return_value=23)
 
     def test_moveLeft(self):
         self._cell.moveLeft()
@@ -78,25 +83,16 @@ class TestBasicCell(unittest.TestCase):
     def test_consumeSomeEnergy(self):
         someEnergy = 37
         self._cell.consumeEnergy(someEnergy)
-        cellEnergyAfter = self._cell.energy()
-        assert cellEnergyAfter - self._CELL_ENERGY == someEnergy
-
-    def test_consumeNegativeEnergy(self):
-        negativeEnergy = -94
-        self.assertRaises(ValueError, self._cell.consumeEnergy, negativeEnergy)
+        self._energized.consumeEnergy.assert_called_with(someEnergy)
 
     def test_releaseSomeEnergy(self):
         someEnergy = 34
         self._cell.releaseEnergy(someEnergy)
-        assert self._cell.energy() == self._CELL_ENERGY - someEnergy
+        self._energized.releaseEnergy.assert_called_with(someEnergy)
 
-    def test_releaseTooMuchEnergy(self):
-        tooMuchEnergy = 67
-        self.assertRaises(ValueError, self._cell.releaseEnergy, tooMuchEnergy)
-
-    def test_releaseNegativeEnergy(self):
-        negativeEnergy = -32
-        self.assertRaises(ValueError, self._cell.releaseEnergy, negativeEnergy)
+    def test_getEnergy(self):
+        assert self._cell.energy() == self._energized.energy()
+        self._energized.energy.assert_called_with()
 
 if __name__ == '__main__':
     unittest.main()

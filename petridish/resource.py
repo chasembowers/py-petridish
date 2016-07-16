@@ -1,4 +1,4 @@
-from petridish.energized import Energized
+from petridish.energized import Energized, SimpleEnergy
 from petridish.locatable import Locatable
 from petridish.point import Point
 
@@ -6,10 +6,10 @@ class Resource(Locatable, Energized): pass
 
 class BasicResource(Resource):
 
-    def __init__(self, energy, location=None):
+    def __init__(self, energized, location=None):
 
         if location is None: location = Point()
-        self._myEnergy = energy
+        self._myEnergy = energized
         self._location = location
 
     def isLeftOf(self, xEquals): return self._location.isLeftOf(xEquals)
@@ -22,11 +22,6 @@ class BasicResource(Resource):
 
     def coordinates(self): return self._location.coordinates()
 
-    def energy(self): return self._myEnergy
+    def energy(self): return self._myEnergy.energy()
 
-    def releaseEnergy(self, energy):
-        if energy > self._myEnergy:
-            raise ValueError('Resource does not have enough energy')
-        if energy < 0:
-            raise ValueError('Cannot give negative energy.')
-        self._myEnergy -= energy
+    def releaseEnergy(self, energy): self._myEnergy.releaseEnergy(energy)

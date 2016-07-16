@@ -1,4 +1,4 @@
-from petridish.energized import Energized
+from petridish.energized import Energized, SimpleEnergy
 from petridish.locatable import Locatable
 from petridish.movable import Movable
 from petridish.point import Point
@@ -9,11 +9,13 @@ class Cell(Locatable, Movable, Energized):
 
 class BasicCell(Cell):
 
-    def __init__(self, actor, energy, location=None):
+    def __init__(self, actor, energized=None, location=None):
         if location is None: location = Point()
         self._location = location
         self._actor = actor
-        self._myEnergy = energy
+
+        if energized is None: energized = SimpleEnergy(100)
+        self._myEnergy = energized
 
     def moveLeft(self): self._location.moveLeft()
 
@@ -37,15 +39,8 @@ class BasicCell(Cell):
 
     def coordinates(self): return self._location.coordinates()
 
-    def energy(self): return self._myEnergy
+    def energy(self): return self._myEnergy.energy()
 
-    def consumeEnergy(self, energy):
-        if energy < 0: raise ValueError('Cannot consume negative energy.')
-        self._myEnergy += energy
+    def consumeEnergy(self, energy): self._myEnergy.consumeEnergy(energy)
 
-    def releaseEnergy(self, energy):
-        if energy > self._myEnergy:
-            raise ValueError('Resource does not have enough energy')
-        if energy < 0:
-            raise ValueError('Cannot give negative energy.')
-        self._myEnergy -= energy
+    def releaseEnergy(self, energy): self._myEnergy.releaseEnergy(energy)
