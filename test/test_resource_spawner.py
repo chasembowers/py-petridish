@@ -30,6 +30,7 @@ class TestUniformResourceSpawner(unittest.TestCase):
         assert len(spawnedResources) == 1
         assert type(spawnedResources[0]._myEnergy) == type(self._energized)
         assert spawnedResources[0]._myEnergy.energy() == self._energized.energy()
+        assert spawnedResources[0]._myEnergy != self._energized
 
     def test_spawnsInBounds(self):
 
