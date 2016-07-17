@@ -1,11 +1,5 @@
 import unittest
-from mock import MagicMock
-
-from petridish.cell import BasicCell, Cell
-from petridish.energized import Energized
-from petridish.point import Point
-from petridish.actor import Actor, RandomActor
-from petridish.resource import Resource
+from petridish.actor import RandomActor
 
 
 class TestRandomActor(unittest.TestCase):
