@@ -46,9 +46,6 @@ class TestSimpleEnergy(unittest.TestCase):
         initialEnergy = self._simpleEnergy.energy()
         child = self._simpleEnergy.child()
         assert self._simpleEnergy.energy() == initialEnergy * (1 - self._childEnergyRatio)
-        print child.energy()
-        print initialEnergy
-        print self._childEnergyRatio
         assert child.energy() == initialEnergy * self._childEnergyRatio
         assert self._simpleEnergy != child
 
