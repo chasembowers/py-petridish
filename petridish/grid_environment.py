@@ -87,6 +87,10 @@ class BasicGridEnvironment(GridEnvironment):
         self._removeDead()
 
     def _doAction(self, cell, action):
+        if action in self._cost:
+            actionCost = self._cost[action]
+            if actionCost > cell.energy(): return
+            cell.releaseEnergy(actionCost)
         if not action: return
         elif action == 'left': cell.moveLeft()
         elif action == 'right': cell.moveRight()

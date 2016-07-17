@@ -4,3 +4,4 @@ return copies instead of references?
 cell.act timeout
 integration test
 precompute features each timestep for cells
+add warnings for useless/invalid actions

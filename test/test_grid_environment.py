@@ -151,13 +151,24 @@ class TestBasicGridEnvironment(unittest.TestCase):
     def test_cellLosesEnergyOfAction(self):
 
         cellAction = "left"
-        self._cost[cellAction] = 58
+        self._cost[cellAction] = self._CELL_ENERGY / 2
         self._cost["right"] = 29
 
         self._cell.act = MagicMock(return_value=cellAction)
         self._env.addCell(self._cell)
         self._env.timeStep()
         self._cell.releaseEnergy.assert_called_with(self._cost[cellAction])
+
+    def test_actionNotCompletedIfNotEnoughEnergy(self):
+
+        cellAction = "left"
+        self._cost[cellAction] = self._CELL_ENERGY + 10
+
+        self._cell.act = MagicMock(return_value=cellAction)
+        self._env.addCell(self._cell)
+        self._env.timeStep()
+
+        assert not self._cell.moveLeft.called
 
 if __name__ == '__main__':
     unittest.main()
