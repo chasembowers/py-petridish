@@ -8,11 +8,11 @@ class TestRandomActor(unittest.TestCase):
 
         self._randomActor = RandomActor()
 
-    def test_act(self):
+    def test_returnsValidAction(self):
 
         assert self._randomActor.act(None, None, None) in ['left', 'right', 'up', 'down', '']
 
-    def test_child(self):
+    def test_producesChild(self):
 
         assert type(self._randomActor.child()) == type(self._randomActor)
 

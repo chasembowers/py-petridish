@@ -32,10 +32,12 @@ class TestBasicCell(unittest.TestCase):
         self._location.isAbove = MagicMock()
 
         self._actor.act = MagicMock()
+        self._actor.child = MagicMock(return_value=Actor())
 
         self._energized.consumeEnergy = MagicMock()
         self._energized.releaseEnergy = MagicMock()
         self._energized.energy = MagicMock(return_value=23)
+        self._energized.child = MagicMock(return_value=Energized())
 
     def test_moveLeft(self):
         self._cell.moveLeft()
@@ -93,6 +95,15 @@ class TestBasicCell(unittest.TestCase):
     def test_getEnergy(self):
         assert self._cell.energy() == self._energized.energy()
         self._energized.energy.assert_called_with()
+
+    def test_producesChild(self):
+        child = self._cell.child()
+        assert type(child) == type(self._cell)
+        assert child != self._cell
+        self._energized.child.assert_called_with()
+        self._actor.child.assert_called_with()
+        assert child.coordinates() == self._cell.coordinates()
+        assert child._location != self._cell._location
 
 if __name__ == '__main__':
     unittest.main()
