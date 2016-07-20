@@ -8,7 +8,7 @@ from petridish.point import Point
 
 class Cell(Locatable, Movable, Energized, Parent):
 
-    def act(self, bodies): raise NotImplementedError('Must implement Cell interface.')
+    def act(self, cells, resources): raise NotImplementedError('Must implement Cell interface.')
 
 class BasicCell(Cell):
 

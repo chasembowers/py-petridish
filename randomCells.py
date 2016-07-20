@@ -1,6 +1,7 @@
 from animator import Animator
 from petridish.actor import RandomActor
 from petridish.cell import BasicCell
+from petridish.energized import SimpleEnergy
 from petridish.grid_environment import BasicGridEnvironment
 
 

@@ -10,7 +10,7 @@ class TestRandomActor(unittest.TestCase):
 
     def test_returnsValidAction(self):
 
-        assert self._randomActor.act(None, None, None) in ['left', 'right', 'up', 'down', '']
+        assert self._randomActor.act(None, None, None) in ['left', 'right', 'up', 'down', 'reproduce', '']
 
     def test_producesChild(self):
 

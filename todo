@@ -1,3 +1,4 @@
+make cell's None action deplete <1 energy
 cell/actor reproduction
 cap number of resources <- bottleneck
 return copies instead of references?

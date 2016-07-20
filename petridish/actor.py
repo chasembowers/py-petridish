@@ -11,4 +11,4 @@ class RandomActor(Actor):
 
     def child(self): return self
 
-    def act(self, myCell, cells, resources): return random.choice(['left', 'right', 'up', 'down', ''])
+    def act(self, myCell, cells, resources): return random.choice(['left', 'right', 'up', 'down', 'reproduce', ''])

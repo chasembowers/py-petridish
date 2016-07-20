@@ -170,5 +170,53 @@ class TestBasicGridEnvironment(unittest.TestCase):
 
         assert not self._cell.moveLeft.called
 
+    def childHelper(self, cellCoords, childCoords, cellEnergyBefore, cellEnergyAfter, childEnergy):
+
+        self._cost["reproduce"] = 0
+
+        child = Cell()
+        child.coordinates = MagicMock(return_value=childCoords)
+        child.energy = MagicMock(return_value=childEnergy)
+
+        self._cell.act = MagicMock(return_value="reproduce")
+        self._cell.coordinates = MagicMock(return_value=cellCoords)
+        self._cell.child = MagicMock(return_value=child)
+        self._cell.energy = MagicMock(side_effect=
+            lambda: cellEnergyBefore + int(self._cell.child.called) * (cellEnergyAfter - cellEnergyBefore))
+
+        self._env.addCell(self._cell)
+
+        return child
+
+    def test_addsValidChildCell(self):
+        child = self.childHelper(
+            cellCoords=(9,2),
+            childCoords=(9,2),
+            cellEnergyBefore=16,
+            cellEnergyAfter=8,
+            childEnergy=6)
+        self._env.timeStep()
+        assert child in self._env.cells()
+
+    def test_doesNotAddMovedChildCell(self):
+        child = self.childHelper(
+            cellCoords=(9,2),
+            childCoords=(9,1),
+            cellEnergyBefore=16,
+            cellEnergyAfter=8,
+            childEnergy=6)
+        self._env.timeStep()
+        assert child not in self._env.cells()
+
+    def test_doesNotAddChildCellWithTooMuchEnergy(self):
+        child = self.childHelper(
+            cellCoords=(9,2),
+            childCoords=(9,1),
+            cellEnergyBefore=16,
+            cellEnergyAfter=8,
+            childEnergy=10)
+        self._env.timeStep()
+        assert child not in self._env.cells()
+
 if __name__ == '__main__':
     unittest.main()

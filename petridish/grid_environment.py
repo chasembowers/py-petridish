@@ -31,11 +31,13 @@ class BasicGridEnvironment(GridEnvironment):
         "left": 2,
         "right": 2,
         "up": 2,
-        "down": 2
+        "down": 2,
+        "reproduce": 10
     }
 
     def __init__(self, width, height, resourceDistributor=None, resourceSpawner=None, cost=None):
         self._cells = []
+        self._children = []
         self._resources = []
         self._width = width
         self._height = height
@@ -84,6 +86,7 @@ class BasicGridEnvironment(GridEnvironment):
         self._distributor.distribute(self._cells, self._resources)
         for resource in self._spawner.spawn(self):
             self._addResource(resource)
+        self._addChildren()
         self._removeDead()
 
     def _doAction(self, cell, action):
@@ -96,8 +99,8 @@ class BasicGridEnvironment(GridEnvironment):
         elif action == 'right': cell.moveRight()
         elif action == 'up': cell.moveUp()
         elif action == 'down': cell.moveDown()
+        elif action == 'reproduce': self._reproduce(cell)
         else: raise Exception('Not a valid action')
-        if action in self._cost: cell.releaseEnergy(self._cost[action])
 
     def _moveInBounds(self, locatable):
         if locatable.isLeftOf(0):locatable.moveRight()
@@ -115,3 +118,14 @@ class BasicGridEnvironment(GridEnvironment):
         for resource in self._resources:
             if resource.energy() == 0: resourcesToRemove.add(resource)
         self._resources = [x for x in self._resources if x not in resourcesToRemove]
+
+    def _reproduce(self, cell):
+        initialEnergy = cell.energy()
+        child = cell.child()
+        if child.coordinates() != cell.coordinates(): return
+        if cell.energy() + child.energy() > initialEnergy: return
+        self._children.append(child)
+
+    def _addChildren(self):
+        self._cells += self._children
+        self._children = []

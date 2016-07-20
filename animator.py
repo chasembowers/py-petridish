@@ -11,6 +11,7 @@ class Animator:
 
     def _update(self, i):
         self._env.timeStep()
+        #print [c.energy() for c in self._env.cells()]
         self._cells.set_data(self._coordinatesToLists(self._env.cells()))
         self._resources.set_data(self._coordinatesToLists(self._env.resources()))
 
