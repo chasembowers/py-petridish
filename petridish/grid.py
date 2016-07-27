@@ -58,7 +58,7 @@ class FastGrid(Grid):
         return self._bodyToLocation[body]
 
     def at(self, location):
-        self._assertLocationOccupied(location)
+        if location not in self._locationToBody: return None
         return self._locationToBody[location]
 
     def move(self, body, location):

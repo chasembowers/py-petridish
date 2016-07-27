@@ -1,7 +1,7 @@
-from petridish.grid import FastGrid
+from petridish.grid import FastGrid, Grid
 
 
-class BasicEnvironment:
+class BasicEnvironment(object):
 
     def __init__(self, width, height):
         self.cells = FastGrid(width, height)

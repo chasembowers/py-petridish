@@ -5,15 +5,15 @@ from petridish.grid import FastGrid
 
 class TestFastGrid(unittest.TestCase):
 
-    _WIDTH = 10
-    _HEIGHT = 20
+    WIDTH = 10
+    HEIGHT = 20
 
     def setUp(self):
-        self.grid = FastGrid(self._WIDTH, self._HEIGHT)
+        self.grid = FastGrid(self.WIDTH, self.HEIGHT)
 
     def test_widthAndHeight(self):
-        assert self.grid.width() == self._WIDTH
-        assert self.grid.height() == self._HEIGHT
+        assert self.grid.width() == self.WIDTH
+        assert self.grid.height() == self.HEIGHT
 
     def test_addBody(self):
         body = 'body'
@@ -36,8 +36,8 @@ class TestFastGrid(unittest.TestCase):
     def test_cannotGetLocationOfUnplacedBody(self):
         self.assertRaises(LookupError, self.grid.locationOf, 'a')
 
-    def test_cannotGetBodyAtUnoccupiedLocation(self):
-        self.assertRaises(LookupError, self.grid.at, (1, 2))
+    def test_NoBodyAtUnoccupiedLocation(self):
+        assert self.grid.at((1, 2)) is None
 
     def test_removeBody(self):
         body = 'body'
@@ -45,7 +45,7 @@ class TestFastGrid(unittest.TestCase):
         self.grid.insert(body, location)
         self.grid.remove(body)
         assert body not in self.grid
-        self.assertRaises(LookupError, self.grid.at, location)
+        assert self.grid.at(location) is None
         self.assertRaises(LookupError, self.grid.locationOf, body)
 
     def test_cannotRemoveUnplacedBody(self):
