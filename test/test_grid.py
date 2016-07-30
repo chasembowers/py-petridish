@@ -12,16 +12,16 @@ class TestFastGrid(unittest.TestCase):
         self.grid = FastGrid(self.WIDTH, self.HEIGHT)
 
     def test_widthAndHeight(self):
-        assert self.grid.width() == self.WIDTH
-        assert self.grid.height() == self.HEIGHT
+        self.assertEqual(self.grid.width(), self.WIDTH)
+        self.assertEqual(self.grid.height(), self.HEIGHT)
 
     def test_addBody(self):
         body = 'body'
         location = (1,2)
         self.grid.insert(body, location)
-        assert body in self.grid
-        assert self.grid.locationOf(body) is location
-        assert self.grid.at(location) is body
+        self.assertIn(body, self.grid)
+        self.assertEqual(self.grid.locationOf(body), location)
+        self.assertEqual(self.grid.at(location), body)
 
     def test_cannotAddBodyTwice(self):
         body = 'body'
@@ -37,15 +37,15 @@ class TestFastGrid(unittest.TestCase):
         self.assertRaises(LookupError, self.grid.locationOf, 'a')
 
     def test_NoBodyAtUnoccupiedLocation(self):
-        assert self.grid.at((1, 2)) is None
+        self.assertEqual(self.grid.at((1, 2)), None)
 
     def test_removeBody(self):
         body = 'body'
         location = (1, 2)
         self.grid.insert(body, location)
         self.grid.remove(body)
-        assert body not in self.grid
-        assert self.grid.at(location) is None
+        self.assertNotIn(body, self.grid)
+        self.assertEqual(self.grid.at(location), None)
         self.assertRaises(LookupError, self.grid.locationOf, body)
 
     def test_cannotRemoveUnplacedBody(self):
@@ -56,7 +56,7 @@ class TestFastGrid(unittest.TestCase):
         location = (1, 2)
         self.grid.insert(body, location)
         self.grid.removeAt(location)
-        assert body not in self.grid
+        self.assertNotIn(body, self.grid)
 
     def test_cannotRemoveAtUnoccupiedLocation(self):
         self.assertRaises(LookupError, self.grid.removeAt, (1, 2))
@@ -76,7 +76,7 @@ class TestFastGrid(unittest.TestCase):
         newLocation = (3,4)
         self.grid.insert(body, (1, 2))
         self.grid.move(body, newLocation)
-        assert self.grid.locationOf(body) is newLocation
+        self.assertEqual(self.grid.locationOf(body), newLocation)
 
 if __name__ == '__main__':
     unittest.main()

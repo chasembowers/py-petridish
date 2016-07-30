@@ -1,4 +1,4 @@
-from petridish.grid import FastGrid, Grid
+from petridish.grid import FastGrid
 
 
 class BasicEnvironment(object):

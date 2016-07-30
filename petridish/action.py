@@ -1,22 +1,32 @@
+from operator import add
+
+
 class Action(object):
 
-    def apply(self, cell, environment): raise NotImplementedError
+    def apply(self, environment, cellLocation, cellArgs): raise NotImplementedError
 
-    def cost(self): raise NotImplementedError()
+class Move(Action):
 
-class MoveUp(Action):
+    DIRECTIONS = {
+        'up': (0, 1),
+        'down': (0, -1),
+        'left': (-1, 0),
+        'right': (1, 0)
+    }
 
     def __init__(self, cost):
         self._cost = cost
 
-    def apply(self, cell, environment):
+    def apply(self, environment, cellLocation, cellArgs):
 
         cells = environment.cells
-        if cell not in cells: return False
-        cellLocation = cells.locationOf(cell)
-        newLocation = (cellLocation[0], cellLocation[1] + 1)
-        if cells.at(newLocation): return False
-        cells.move(cell, newLocation)
-        return True
+        cell = cells.at(cellLocation)
 
-    def cost(self): return self._cost
+        if not cell: return False
+        newLocation = tuple(map(add, cellLocation, self.DIRECTIONS[cellArgs]))
+        if cells.at(newLocation): return False
+        if cell.energy() < self._cost: return False
+
+        cells.move(cell, newLocation)
+        cell.releaseEnergy(self._cost)
+        return True
