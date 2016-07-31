@@ -1,13 +1,13 @@
 import unittest
 
-from petridish.action import Move
+from petridish.update import Move
 from mock import MagicMock
 
 from petridish.cell import Cell
 from petridish.environment import BasicEnvironment
 
 
-class TestMoveActions(unittest.TestCase):
+class TestMoveUpdates(unittest.TestCase):
 
     WIDTH = 15
     HEIGHT = 25
@@ -29,11 +29,11 @@ class TestMoveActions(unittest.TestCase):
         self.cell.energy = MagicMock(return_value=self.COST + 10)
         self.cell.releaseEnergy = MagicMock()
         self.env = BasicEnvironment(self.WIDTH, self.HEIGHT)
-        self.move = Move(self.COST)
         self.env.cells.insert(self.cell, self.CELL_LOCATION)
 
-    def assertMoves(self, cellArgs, newLocation):
-        self.assertTrue(self.move.apply(self.env, self.CELL_LOCATION, cellArgs))
+    def assertMoves(self, direction, newLocation):
+        self.move = Move(self.CELL_LOCATION, direction, self.COST)
+        self.assertTrue(self.move.apply(self.env))
         self.assertEqual(self.env.cells.locationOf(self.cell), newLocation)
 
     def test_movesUp(self): self.assertMoves(self.UP, self.ABOVE)
@@ -45,20 +45,23 @@ class TestMoveActions(unittest.TestCase):
     def test_movesRight(self): self.assertMoves(self.RIGHT, self.RIGHT_OF)
 
     def test_cellLosesEnergy(self):
-        self.move.apply(self.env, self.CELL_LOCATION, self.UP)
+        self.move = Move(self.CELL_LOCATION, self.UP, self.COST)
+        self.move.apply(self.env)
         self.cell.releaseEnergy.assert_called_with(self.COST)
 
     def test_doesNotMoveIfNotEnoughEnergy(self):
+        self.move = Move(self.CELL_LOCATION, self.UP, self.COST)
         self.cell.energy = MagicMock(return_value=self.COST / 2.)
-        self.assertFalse(self.move.apply(self.env, self.CELL_LOCATION, self.UP))
 
     def test_doesNotMoveIfOccupied(self):
+        self.move = Move(self.CELL_LOCATION, self.UP, self.COST)
         self.env.cells.insert(Cell(), self.ABOVE)
-        self.assertFalse(self.move.apply(self.env, self.CELL_LOCATION, self.UP))
+        self.assertFalse(self.move.apply(self.env))
         self.assertEqual(self.env.cells.locationOf(self.cell), self.CELL_LOCATION)
 
     def test_cannotMoveUnplacedCell(self):
-        self.assertFalse(self.move.apply(self.env, self.BELOW, self.UP))
+        self.move = Move(self.BELOW, self.UP, self.COST)
+        self.assertFalse(self.move.apply(self.env))
 
 
 if __name__ == '__main__':

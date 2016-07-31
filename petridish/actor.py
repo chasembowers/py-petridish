@@ -5,7 +5,7 @@ from petridish.parent import Parent
 
 class Actor(Parent):
 
-    def act(self, environment, cellLocation): raise NotImplementedError('Must implement Actor interface.')
+    def act(self, observations): raise NotImplementedError('Must implement Actor interface.')
 
 # class RandomActor(Actor):
 #
