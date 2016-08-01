@@ -78,5 +78,17 @@ class TestFastGrid(unittest.TestCase):
         self.grid.move(body, newLocation)
         self.assertEqual(self.grid.locationOf(body), newLocation)
 
+    def test_length(self):
+        bodies = ['body1', 'body2']
+        for i in range(len(bodies)):
+            self.grid.insert(bodies[i], (0, i))
+        self.assertEqual(len(self.grid), len(bodies))
+
+    def test_iteration(self):
+        bodies = ['body1', 'body2', 'body3']
+        for i in range(len(bodies)):
+            self.grid.insert(bodies[i], (0, i))
+        self.assertEqual(set(self.grid), set(bodies))
+
 if __name__ == '__main__':
     unittest.main()

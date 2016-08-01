@@ -7,17 +7,10 @@ class Update(object):
 
 class Move(Update):
 
-    _DIRECTIONS = {
-        'up': (0, 1),
-        'down': (0, -1),
-        'left': (-1, 0),
-        'right': (1, 0)
-    }
-
-    def __init__(self, cellLocation, direction, cost):
+    def __init__(self, cellLocation, displacement, cost):
 
         self._cellLocation = cellLocation
-        self._locationDelta = self._DIRECTIONS[direction]
+        self._displacement = displacement
         self._cost = cost
 
     def apply(self, environment):
@@ -26,7 +19,7 @@ class Move(Update):
         cell = cells.at(self._cellLocation)
 
         if not cell: return False
-        newLocation = tuple(map(add, self._cellLocation, self._locationDelta))
+        newLocation = tuple(map(add, self._cellLocation, self._displacement))
         if cells.at(newLocation): return False
         if cell.energy() < self._cost: return False
 
@@ -37,6 +30,6 @@ class Move(Update):
     def __eq__(self, other):
         if not isinstance(other, self.__class__): return False
         if self._cellLocation != other._cellLocation: return False
-        if self._locationDelta != other._locationDelta: return False
+        if self._displacement != other._displacement: return False
         if self._cost != other._cost: return False
         return True

@@ -67,6 +67,8 @@ class FastGrid(Grid):
 
     def __iter__(self): return iter(self._bodyToLocation)
 
+    def __len__(self): return len(self._bodyToLocation)
+
     def _assertBodyExists(self, body):
         if body not in self._bodyToLocation: raise LookupError('Body has not been placed on Grid.')
 

@@ -15,13 +15,13 @@ class TestMoveUpdates(unittest.TestCase):
 
     CELL_LOCATION = (1, 2)
     CELL_X, CELL_Y = CELL_LOCATION
-    UP = 'up'
+    UP = (0, 1)
     ABOVE = (CELL_X, CELL_Y + 1)
-    DOWN = 'down'
+    DOWN = (0, -1)
     BELOW = (CELL_X, CELL_Y - 1)
-    LEFT = 'left'
+    LEFT = (-1, 0)
     LEFT_OF = (CELL_X - 1, CELL_Y)
-    RIGHT = 'right'
+    RIGHT = (1, 0)
     RIGHT_OF = (CELL_X + 1, CELL_Y)
 
     def setUp(self):
@@ -31,8 +31,8 @@ class TestMoveUpdates(unittest.TestCase):
         self.env = BasicEnvironment(self.WIDTH, self.HEIGHT)
         self.env.cells.insert(self.cell, self.CELL_LOCATION)
 
-    def assertMoves(self, direction, newLocation):
-        self.move = Move(self.CELL_LOCATION, direction, self.COST)
+    def assertMoves(self, displacement, newLocation):
+        self.move = Move(self.CELL_LOCATION, displacement, self.COST)
         self.assertTrue(self.move.apply(self.env))
         self.assertEqual(self.env.cells.locationOf(self.cell), newLocation)
 
