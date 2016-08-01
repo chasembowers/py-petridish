@@ -1,0 +1,15 @@
+make cell's None action deplete <1 energy
+cell/actor reproduction
+cap number of resources <- bottleneck
+return copies instead of references?
+cell.act timeout
+integration test
+precompute features each timestep for cells
+add warnings for useless/invalid actions
+distinguish between public and private observations
+concurrency
+    use shared memory instead?
+make extensible for 3d
+replace updates, update factories with lambdas?
+make move updates support >1 distance moves
+add type/value checking
