@@ -1,8 +1,9 @@
-from petridish.actor import Actor
 from petridish.energized import Energized, SimpleEnergy
 from petridish.parent import Parent
 
-class Cell(Energized, Actor, Parent): pass
+class Cell(Energized, Parent):
+
+    def act(self, observations, cellLocation): raise NotImplementedError()
 
 # class BasicCell(Cell):
 #

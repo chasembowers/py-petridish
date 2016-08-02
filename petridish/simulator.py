@@ -3,7 +3,7 @@ import random
 from petridish.update_factory import MoveFactory
 
 
-class BasicSimulator:
+class RandomOrderSimulator:
 
     def __init__(self, environment, observer, actions=None):
 
@@ -21,10 +21,17 @@ class BasicSimulator:
 
     def timeStep(self):
 
-        for cell in random.sample(self._env.cells, len(self._env.cells)):
+        observations = self._observer.observe(self._env)
+        updates = []
+        for cell in self._env.cells:
             cellLocation = self._env.cells.locationOf(cell)
-            observations = self._observer.observe(self._env, cellLocation)
-            action = cell.act(observations)
+            action = cell.act(observations, cellLocation)
             updateFactory = self._actions[action]
             update = updateFactory.produce(cellLocation)
-            update.apply(self._env)
+            updates.append(update)
+        self.applyRandomly(updates)
+
+    def applyRandomly(self, updates):
+
+            random.shuffle(updates)
+            for update in updates: update.apply(self._env)

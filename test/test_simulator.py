@@ -5,12 +5,12 @@ from mock import MagicMock
 from petridish.cell import Cell
 from petridish.environment import BasicEnvironment
 from petridish.observer import Observer
-from petridish.simulator import BasicSimulator
+from petridish.simulator import RandomOrderSimulator
 from petridish.update import Update
 from petridish.update_factory import UpdateFactory
 
 
-class TestBasicSimulator(unittest.TestCase):
+class TestRandomOrderSimulator(unittest.TestCase):
 
     CELL_LOCATION = (4,5)
     WIDTH = 25
@@ -33,14 +33,14 @@ class TestBasicSimulator(unittest.TestCase):
         self.actions = {self.ACTION_NAME: self.factory}
 
         self.observer = Observer()
-        self.observer.observe = MagicMock(side_effect= \
-            lambda env, loc: env if env is self.env and loc is self.CELL_LOCATION else None)
+        self.observer.observe = MagicMock(side_effect=lambda env: env)
 
-        self.simulator = BasicSimulator(self.env, self.observer, self.actions)
+        self.simulator = RandomOrderSimulator(self.env, self.observer, self.actions)
 
     def test_appliesUpdate(self):
 
-        self.cell.act = MagicMock(side_effect=lambda env: self.ACTION_NAME if env is self.env else None)
+        self.cell.act = MagicMock(side_effect= \
+            lambda obs, loc: self.ACTION_NAME if obs is self.env and loc is self.CELL_LOCATION else None)
         self.simulator.timeStep()
         self.update.apply.assert_called_with(self.env)
 

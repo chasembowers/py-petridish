@@ -13,3 +13,4 @@ make extensible for 3d
 replace updates, update factories with lambdas?
 make move updates support >1 distance moves
 add type/value checking
+cell passes introspection to actor
