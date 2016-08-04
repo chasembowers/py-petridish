@@ -2,6 +2,12 @@ import random
 
 from petridish.update_factory import MoveFactory
 
+DEFAULT_ACTIONS = {
+        'up': MoveFactory((0, 1), 10),
+        'down': MoveFactory((0, -1), 10),
+        'left': MoveFactory((-1, 0), 10),
+        'right': MoveFactory((1, 0), 10)
+    }
 
 class RandomOrderSimulator:
 
@@ -10,13 +16,7 @@ class RandomOrderSimulator:
         self._env = environment
         self._observations = observations
 
-        if not actions:
-            actions = {
-                'up': MoveFactory((0, 1), 10),
-                'down': MoveFactory((0, -1), 10),
-                'left': MoveFactory((-1, 0), 10),
-                'right': MoveFactory((1, 0), 10)
-            }
+        if not actions: actions = DEFAULT_ACTIONS
         self._actions = actions
 
     def timeStep(self):
