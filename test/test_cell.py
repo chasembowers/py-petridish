@@ -6,7 +6,7 @@ from petridish.energized import Energized
 from petridish.actor import Actor
 
 from petridish.introspector import Introspector
-from petridish.observer import Observations
+from petridish.observations import Observations
 
 
 class TestBasicCell(unittest.TestCase):

@@ -5,10 +5,10 @@ from petridish.update_factory import MoveFactory
 
 class RandomOrderSimulator:
 
-    def __init__(self, environment, observer, actions=None):
+    def __init__(self, environment, observations, actions=None):
 
         self._env = environment
-        self._observer = observer
+        self._observations = observations
 
         if not actions:
             actions = {
@@ -21,7 +21,7 @@ class RandomOrderSimulator:
 
     def timeStep(self):
 
-        observations = self._observer.observe(self._env)
+        observations = self._observations.of(self._env)
         updates = []
         for cell in self._env.cells:
             cellLocation = self._env.cells.locationOf(cell)
