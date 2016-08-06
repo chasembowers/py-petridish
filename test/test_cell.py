@@ -5,9 +5,8 @@ from petridish.cell import BasicCell
 from petridish.energized import Energized
 from petridish.actor import Actor
 
-from petridish.introspector import Introspector
-from petridish.observations import Observations
-
+from petridish.introspect import Introspector, Introspection
+from petridish.observe import Observations
 
 class TestBasicCell(unittest.TestCase):
 
@@ -20,13 +19,14 @@ class TestBasicCell(unittest.TestCase):
         self.cell = BasicCell(self.actor, self.energized, self.introspector)
 
     def test_act(self):
+        introspection = Introspection()
         observations = Observations()
         cellLocation = (8,3)
-        self.introspector.introspect = MagicMock(side_effect=lambda cell: cell)
+        self.introspector.introspect = MagicMock(side_effect=lambda cell: introspection if cell is self.cell else None)
 
         action = 'act'
         self.actor.act = MagicMock(side_effect= \
-            lambda cell, obs, loc: action if cell is self.cell and obs is observations and loc is cellLocation else None)
+            lambda int, obs, loc: action if int is introspection and obs is observations and loc is cellLocation else None)
 
         self.assertEqual(self.cell.act(observations, cellLocation), action)
 

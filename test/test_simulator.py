@@ -4,7 +4,7 @@ from mock import MagicMock
 
 from petridish.cell import Cell
 from petridish.environment import BasicEnvironment
-from petridish.observations import Observations
+from petridish.observe import Observer, Observations
 from petridish.simulator import RandomOrderSimulator
 from petridish.update import Update
 from petridish.update_factory import UpdateFactory
@@ -32,15 +32,16 @@ class TestRandomOrderSimulator(unittest.TestCase):
 
         self.actions = {self.ACTION_NAME: self.factory}
 
-        self.observations = Observations
-        self.observations.of = MagicMock(side_effect=lambda env: env)
+        self.observations = Observations()
+        self.observer = Observer()
+        self.observer.observe = MagicMock(side_effect=lambda env: self.observations if env is self.env else None)
 
-        self.simulator = RandomOrderSimulator(self.env, self.observations, self.actions)
+        self.simulator = RandomOrderSimulator(self.env, self.observer, self.actions)
 
     def test_appliesUpdate(self):
 
         self.cell.act = MagicMock(side_effect= \
-            lambda obs, loc: self.ACTION_NAME if obs is self.env and loc is self.CELL_LOCATION else None)
+            lambda obs, loc: self.ACTION_NAME if obs is self.observations and loc is self.CELL_LOCATION else None)
         self.simulator.timeStep()
         self.update.apply.assert_called_with(self.env)
 

@@ -11,17 +11,17 @@ DEFAULT_ACTIONS = {
 
 class RandomOrderSimulator:
 
-    def __init__(self, environment, observations, actions=None):
+    def __init__(self, environment, observer, actions=None):
 
         self._env = environment
-        self._observations = observations
+        self._observer = observer
 
         if not actions: actions = DEFAULT_ACTIONS
         self._actions = actions
 
     def timeStep(self):
 
-        observations = self._observations.of(self._env)
+        observations = self._observer.observe(self._env)
         updates = []
         for cell in self._env.cells:
             cellLocation = self._env.cells.locationOf(cell)
