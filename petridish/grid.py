@@ -10,30 +10,19 @@ class Grid(object):
 
     def at(self, location): raise NotImplementedError()
 
-    def width(self): raise NotImplementedError()
+    def move(self, body, location): raise NotImplementedError()
 
-    def height(self): raise NotImplementedError()
-
-    def __iter__(self): raise NotImplementedError
+    def __iter__(self): raise NotImplementedError()
 
 class FastGrid(Grid):
 
-    def __init__(self, width, height):
+    def __init__(self):
 
-        self._width = width
-        self._height = height
         self._locationToBody = {}
         self._bodyToLocation = {}
 
-    def width(self): return self._width
-
-    def height(self): return self._height
-
     def insert(self, body, location):
 
-        if type(location) is not tuple or len(location) is not 2: raise TypeError('Location must be a 2-tuple.')
-        x,y = location
-        if x < 0 or x >= self._width or y < 0 or y >= self._height: raise ValueError('Location out of bounds')
         if body in self._bodyToLocation: raise ValueError('Body has already been placed on Grid.')
         if location in self._locationToBody: raise ValueError('Location is occupied by another Body.')
 

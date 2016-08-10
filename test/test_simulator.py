@@ -3,7 +3,7 @@ import unittest
 from mock import MagicMock
 
 from petridish.cell import Cell
-from petridish.environment import BasicEnvironment
+from petridish.environment import RectangularEnvironment
 from petridish.observe import Observer, Observations
 from petridish.simulator import RandomOrderSimulator
 from petridish.update import Update
@@ -21,8 +21,8 @@ class TestRandomOrderSimulator(unittest.TestCase):
 
         self.cell = Cell()
 
-        self.env = BasicEnvironment(self.WIDTH, self.HEIGHT)
-        self.env.cells.insert(self.cell, self.CELL_LOCATION)
+        self.env = RectangularEnvironment(self.WIDTH, self.HEIGHT)
+        self.env.insert('cells', self.cell, self.CELL_LOCATION)
 
         self.update = Update()
         self.update.apply = MagicMock()
@@ -45,6 +45,8 @@ class TestRandomOrderSimulator(unittest.TestCase):
         self.simulator.timeStep()
         self.update.apply.assert_called_with(self.env)
 
+    def test_getEnvironment(self):
+        self.assertEqual(self.simulator.environment(), self.env)
 
 
 if __name__ == '__main__':

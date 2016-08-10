@@ -9,11 +9,7 @@ class TestFastGrid(unittest.TestCase):
     HEIGHT = 20
 
     def setUp(self):
-        self.grid = FastGrid(self.WIDTH, self.HEIGHT)
-
-    def test_widthAndHeight(self):
-        self.assertEqual(self.grid.width(), self.WIDTH)
-        self.assertEqual(self.grid.height(), self.HEIGHT)
+        self.grid = FastGrid()
 
     def test_addBody(self):
         body = 'body'
@@ -60,16 +56,6 @@ class TestFastGrid(unittest.TestCase):
 
     def test_cannotRemoveAtUnoccupiedLocation(self):
         self.assertRaises(LookupError, self.grid.removeAt, (1, 2))
-
-    def test_locationMustBeTwoTuple(self):
-        self.assertRaises(TypeError, self.grid.insert, 'body', (1, 2, 3))
-
-    def test_cannotAddBodyOutOfBounds(self):
-        body = 'body'
-        self.assertRaises(ValueError, self.grid.insert, body, (-1, 10))
-        self.assertRaises(ValueError, self.grid.insert, body, (10, 10))
-        self.assertRaises(ValueError, self.grid.insert, body, (5, -1))
-        self.assertRaises(ValueError, self.grid.insert, body, (5, 20))
 
     def test_moveBody(self):
         body = 'body'

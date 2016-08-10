@@ -1,4 +1,5 @@
 from petridish.energized import Energized, SimpleEnergy
+from petridish.introspect import NullIntrospector
 from petridish.parent import Parent
 
 class Cell(Energized, Parent):
@@ -9,10 +10,11 @@ class BasicCell(Cell):
 
     def __init__(self, actor, energized=None, introspector=None):
         self._actor = actor
-        self._introspector = introspector
 
         if energized is None: energized = SimpleEnergy(100)
         self._myEnergy = energized
+        if introspector is None: introspector = NullIntrospector()
+        self._introspector = introspector
 
     def act(self, observations, myLocation):
         introspection = self._introspector.introspect(self)

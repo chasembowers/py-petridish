@@ -15,15 +15,15 @@ class Move(Update):
 
     def apply(self, environment):
 
-        cells = environment.cells
-        cell = cells.at(self._cellLocation)
+        cell = environment.at(self._cellLocation, 'cells')
 
         if not cell: return False
         newLocation = tuple(map(add, self._cellLocation, self._displacement))
-        if cells.at(newLocation): return False
+        if environment.at(newLocation, 'cells'): return False
+        if not environment.inBounds(newLocation): return False
         if cell.energy() < self._cost: return False
 
-        cells.move(cell, newLocation)
+        environment.move(cell, newLocation)
         cell.releaseEnergy(self._cost)
         return True
 
