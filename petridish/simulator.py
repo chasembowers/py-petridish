@@ -18,7 +18,7 @@ class Simulator(object):
 
 class RandomOrderSimulator(Simulator):
 
-    def __init__(self, environment, observer=None, actions=None):
+    def __init__(self, environment, observer=None, actions=None, stepUpdates=None):
 
         self._env = environment
 
@@ -26,6 +26,8 @@ class RandomOrderSimulator(Simulator):
         self._observer = observer
         if not actions: actions = DEFAULT_ACTIONS
         self._actions = actions
+        if not stepUpdates: stepUpdates = []
+        self._stepUpdates = stepUpdates
 
     def timeStep(self):
 
@@ -38,6 +40,7 @@ class RandomOrderSimulator(Simulator):
             update = updateFactory.produce(cellLocation)
             updates.append(update)
         self._applyRandomly(updates)
+        for update in self._stepUpdates: update.apply(self._env)
 
     def _applyRandomly(self, updates):
 
