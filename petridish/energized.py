@@ -8,14 +8,13 @@ class Energized(Parent):
 
     def releaseEnergy(self, energy): raise NotImplementedError('Must implement Energized interface.')
 
+class EnergyOrgan(Energized, Parent): pass
+
 class SimpleEnergy(Energized):
 
-    def __init__(self, initialEnergy, childEnergyRatio=.5):
+    def __init__(self, initialEnergy):
         if initialEnergy < 0: raise ValueError('Initial energy must be non-negative.')
         self._myEnergy = initialEnergy
-        if childEnergyRatio < 0 or childEnergyRatio > 1:
-            raise ValueError('Child energy ratio must be between 0 and 1.')
-        self._childEnergyRatio = float(childEnergyRatio)
 
     def energy(self): return self._myEnergy
 
@@ -30,7 +29,23 @@ class SimpleEnergy(Energized):
             raise ValueError('Cannot give negative energy.')
         self._myEnergy -= energy
 
+class SimpleEnergyOrgan(Energized):
+
+    def __init__(self, initialEnergy, childEnergyRatio=.5):
+        self._energy = SimpleEnergy(initialEnergy)
+        if childEnergyRatio < 0 or childEnergyRatio > 1:
+            raise ValueError('Child energy ratio must be between 0 and 1.')
+        self._childEnergyRatio = float(childEnergyRatio)
+
+    def energy(self): return self._energy.energy()
+
+    def consumeEnergy(self, energy): self._energy.consumeEnergy(energy)
+
+    def releaseEnergy(self, energy): self._energy.releaseEnergy(energy)
+
     def child(self):
-        initialEnergy = self._myEnergy
-        self._myEnergy *= (1 - self._childEnergyRatio)
-        return SimpleEnergy(initialEnergy * self._childEnergyRatio, self._childEnergyRatio)
+        initialEnergy = self._energy.energy()
+        childEnergy = self._childEnergyRatio * initialEnergy
+        self._energy.releaseEnergy(childEnergy)
+        return SimpleEnergyOrgan(childEnergy, self._childEnergyRatio)
+

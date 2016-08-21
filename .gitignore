@@ -1,2 +1,4 @@
 todo
 .idea/workspace.xml
+*.pyc
+petridish/*.pyc
