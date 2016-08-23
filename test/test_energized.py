@@ -1,6 +1,7 @@
 import unittest
 
-from petridish.energized import SimpleEnergy, SimpleEnergyOrgan
+from petridish.energized import SimpleEnergy, SimpleEnergyOrgan, SimpleEnergyFactory
+
 
 class TestSimpleEnergy(unittest.TestCase):
 
@@ -57,6 +58,15 @@ class TestSimpleEnergyOrgan(unittest.TestCase):
         self.assertEqual(self.organ.energy(), initialEnergy - childEnergy)
         self.assertEqual(child.energy(), childEnergy)
         self.assertNotEqual(self.organ, child)
+
+class TestSimpleEnergyFactory(unittest.TestCase):
+
+    def test_producesSimpleEnergy(self):
+        initialEnergy = 28
+        factory = SimpleEnergyFactory(initialEnergy)
+        resource = factory.produce()
+        self.assertEqual(type(resource), SimpleEnergy)
+        self.assertEqual(resource.energy(), initialEnergy)
 
 if __name__ == '__main__':
     unittest.main()

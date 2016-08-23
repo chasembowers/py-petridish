@@ -33,6 +33,7 @@ class SimpleEnergy(Energized):
             raise ValueError('Cannot give negative energy.')
         self._myEnergy -= energy
 
+
 class SimpleEnergyOrgan(Energized):
 
     def __init__(self, initialEnergy, childEnergyRatio=.5):
@@ -52,3 +53,10 @@ class SimpleEnergyOrgan(Energized):
         childEnergy = self._childEnergyRatio * initialEnergy
         self._energy.releaseEnergy(childEnergy)
         return SimpleEnergyOrgan(childEnergy, self._childEnergyRatio)
+
+class SimpleEnergyFactory(EnergyFactory):
+
+    def __init__(self, initialEnergy):
+        self._initialEnergy = initialEnergy
+
+    def produce(self): return SimpleEnergy(self._initialEnergy)

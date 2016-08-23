@@ -1,6 +1,8 @@
 import random
 
+from petridish.energized import SimpleEnergyFactory
 from petridish.observe import NullObserver
+from petridish.update import BinaryResourceSpawner
 from petridish.update_factory import MoveFactory
 
 DEFAULT_ACTIONS = {
@@ -26,7 +28,7 @@ class RandomOrderSimulator(Simulator):
         self._observer = observer
         if not actions: actions = DEFAULT_ACTIONS
         self._actions = actions
-        if not stepUpdates: stepUpdates = []
+        if not stepUpdates: stepUpdates = [BinaryResourceSpawner(.1, SimpleEnergyFactory(10))]
         self._stepUpdates = stepUpdates
 
     def timeStep(self):

@@ -10,3 +10,4 @@ make extensible for 3d
 replace updates, update factories with lambdas?
 add type/value checking
 add value checking/exceptions to environment
+add more default arguments
