@@ -91,12 +91,18 @@ class TestBinaryResourceSpawner(unittest.TestCase):
         self.spawner = BinaryResourceSpawner(1, self.factory)
 
         self.env = RectangularEnvironment(self.WIDTH, self.HEIGHT)
+        self.env.randomLocation = MagicMock(return_value=self.RESOURCE_LOCATION)
 
-    def test_spawnsResourceWithEnergy(self):
+    def test_spawnsResource(self):
         self.spawner.apply(self.env)
-        self.assertTrue(self.env.locationOf(self.resource))
+        self.assertEqual(self.env.locationOf(self.resource), self.RESOURCE_LOCATION)
         self.assertEqual(len(set(self.env['resources'])), 1)
 
+    def test_doesNotSpawnIfLocationOccupied(self):
+        self.env.insert('resources', SimpleEnergy(self.ENERGY), self.RESOURCE_LOCATION)
+        self.spawner.apply(self.env)
+        self.assertFalse(self.resource in self.env['resources'])
+        self.assertEqual(len(set(self.env['resources'])), 1)
 
 if __name__ == '__main__':
     unittest.main()
