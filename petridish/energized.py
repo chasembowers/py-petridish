@@ -2,13 +2,17 @@ from petridish.parent import Parent
 
 class Energized(Parent):
 
-    def energy(self): raise NotImplementedError('Must implement Energized interface.')
+    def energy(self): raise NotImplementedError()
 
-    def consumeEnergy(self, energy): raise NotImplementedError('Must implement Energized interface.')
+    def consumeEnergy(self, energy): raise NotImplementedError()
 
-    def releaseEnergy(self, energy): raise NotImplementedError('Must implement Energized interface.')
+    def releaseEnergy(self, energy): raise NotImplementedError()
 
 class EnergyOrgan(Energized, Parent): pass
+
+class EnergyFactory(object):
+
+    def produce(self): raise NotImplementedError()
 
 class SimpleEnergy(Energized):
 
@@ -48,4 +52,3 @@ class SimpleEnergyOrgan(Energized):
         childEnergy = self._childEnergyRatio * initialEnergy
         self._energy.releaseEnergy(childEnergy)
         return SimpleEnergyOrgan(childEnergy, self._childEnergyRatio)
-

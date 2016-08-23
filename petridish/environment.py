@@ -1,4 +1,5 @@
 from petridish.grid import FastGrid
+import random
 
 class Environment(object):
 
@@ -13,6 +14,8 @@ class Environment(object):
     def move(self, body, location): raise NotImplementedError()
 
     def inBounds(self, location): raise NotImplementedError()
+
+    def randomLocation(self): raise  NotImplementedError()
 
     def __getitem__(self, arg): raise NotImplementedError()
 
@@ -54,6 +57,9 @@ class RectangularEnvironment(Environment):
     def inBounds(self, location):
         x,y = location
         return not (x < 0 or x >= self._width or y < 0 or y >= self._height)
+
+    def randomLocation(self):
+        return (random.randint(0, self._width-1), random.randint(0,self._height-1))
 
     def width(self): return self._width
 

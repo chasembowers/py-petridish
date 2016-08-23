@@ -1,10 +1,11 @@
 import unittest
 
-from petridish.update import Move
+from petridish.energized import EnergyFactory, SimpleEnergy
+from petridish.update import Move, BinaryResourceSpawner
 from mock import MagicMock
 
 from petridish.cell import Cell
-from petridish.environment import RectangularEnvironment
+from petridish.environment import RectangularEnvironment, Environment
 
 
 class TestMoveUpdates(unittest.TestCase):
@@ -73,6 +74,28 @@ class TestMoveUpdates(unittest.TestCase):
         self.env.insert('cells', self.cell, self.CELL_LOCATION)
         self.move = Move(self.BELOW, self.UP, self.COST)
         self.assertFalse(self.move.apply(self.env))
+
+class TestBinaryResourceSpawner(unittest.TestCase):
+
+    WIDTH = 15
+    HEIGHT = 25
+    ENERGY = 9
+    RESOURCE_LOCATION = (4,8)
+
+    def setUp(self):
+
+        self.resource = SimpleEnergy(self.ENERGY)
+        self.factory = EnergyFactory()
+        self.factory.produce = MagicMock(return_value=self.resource)
+
+        self.spawner = BinaryResourceSpawner(1, self.factory)
+
+        self.env = RectangularEnvironment(self.WIDTH, self.HEIGHT)
+
+    def test_spawnsResourceWithEnergy(self):
+        self.spawner.apply(self.env)
+        self.assertTrue(self.env.locationOf(self.resource))
+        self.assertEqual(len(set(self.env['resources'])), 1)
 
 
 if __name__ == '__main__':

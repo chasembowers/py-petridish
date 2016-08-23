@@ -74,6 +74,10 @@ class TestRectangularEnvironment(unittest.TestCase):
         for loc in self.OUT_OF_BOUNDS:
             self.assertFalse(self.env.inBounds(loc))
 
+    def test_randomLocation(self):
+        location = self.env.randomLocation()
+        self.assertTrue(self.env.inBounds(location))
+
     def test_getItem(self):
         loc1 = (9, 3)
         loc2 = (7, 6)
