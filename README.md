@@ -11,7 +11,7 @@ The aim of this project is to allow construction of highly composable spatial en
 
 At some point, I would like to implement a cell with a neural network. I also want to parallelize cells' reactions so that multiple cells can make decisions simultaneously.
 
-## External Packages
+## Dependencies
 
 matplotlib - graphing library, only needed to run visual demos
 
