@@ -13,6 +13,8 @@ At some point, I would like to implement a cell with a neural network. I also wa
 
 ## Dependencies
 
+unittest and mock - needed to run tests
+
 matplotlib - graphing library, only needed to run visual demos
 
 ## License
