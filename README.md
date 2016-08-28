@@ -7,7 +7,7 @@ sandbox for composing and simulating spatial environments with evolving cells th
 
 I am working on completing a first useful prototype. A simple animation of random-behavior cells can be seen in 'randomCells.py'.
 
-The aim of this project is to allow construction of highly composable spatial environments and cells that react to those environments such that the cells naturally evolve. The basic ingredients I hope to implement for such an environment are resource consumption, cell reproduction, and cell death. Also, cells need some mechanism of mutating their offspring and reacting to stimulus.
+The aim of this project is to allow construction of highly composable spatial environments and cells that react to those environments such that the cells naturally evolve. The basic ingredients I have implemented to achieve this are resource consumption, cell reproduction, and cell death. Also, cells need some mechanism of mutating their offspring and reacting to stimulus.
 
 At some point, I would like to implement a cell with a neural network. I also want to parallelize cells' reactions so that multiple cells can make decisions simultaneously.
 
