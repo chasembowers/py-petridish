@@ -1,7 +1,7 @@
 py-petridish
 ========
 
-sandbox for composing and simulating spatial environments with evolving cells that must consume resources to survive and reproduce
+sandbox for composing and simulating spatial environments with evolving, decision-making cells that must compete/travel to consume resources in order to survive and reproduce
 
 ## Description
 
